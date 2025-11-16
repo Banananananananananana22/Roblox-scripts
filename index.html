@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-light">
+  <div class="background-blur"></div>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div>
+        <p class="eyebrow">Study Studio</p>
+        <h1>Organize. Focus. Grow.</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="theme-toggle">
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect">
+          <option value="theme-light">Light</option>
+          <option value="theme-dark">Dark</option>
+          <option value="theme-forest">Forest</option>
+          <option value="theme-ocean">Ocean</option>
+        </select>
+      </div>
+      <div class="accent-picker">
+        <label for="accentColor">Accent</label>
+        <input type="color" id="accentColor" value="#8a7ff0" />
+      </div>
+      <button id="logoutBtn" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel auth" id="authPanel">
+      <div class="auth-forms">
+        <div>
+          <h2>Welcome back</h2>
+          <p class="muted">Sign in to sync your study progress, timers, and planners.</p>
+          <form id="loginForm" class="stacked">
+            <label>Username <input name="username" required /></label>
+            <label>Password <input type="password" name="password" required /></label>
+            <button type="submit" class="primary">Login</button>
+          </form>
+        </div>
+        <div class="divider">
+          <span>or</span>
+        </div>
+        <div>
+          <h2>New here?</h2>
+          <p class="muted">Create an account to save your checklists, planners, and themes.</p>
+          <form id="registerForm" class="stacked">
+            <label>Username <input name="username" required /></label>
+            <label>Password <input type="password" name="password" minlength="4" required /></label>
+            <button type="submit" class="secondary">Create account</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel dashboard" id="dashboard" hidden>
+      <div class="grid summary">
+        <div class="card">
+          <p class="eyebrow">Checklist</p>
+          <h3 id="taskSummary">0 tasks done</h3>
+          <p class="muted">Track quick wins and long-term study goals.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Planner</p>
+          <h3 id="plannerSummary">0 sessions planned</h3>
+          <p class="muted">Block time for deep work, review, and rest.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Events</p>
+          <h3 id="eventSummary">0 calendar events</h3>
+          <p class="muted">Deadlines, exams, and reminders stay in sync.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Timer</p>
+          <h3 id="timerStatus">Ready</h3>
+          <p class="muted">Pomodoro presets with custom focus lengths.</p>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Study timers</p>
+              <h3>Focus lab</h3>
+            </div>
+            <div class="badge" id="timerModeLabel">Pomodoro</div>
+          </div>
+          <div class="timer">
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="timer-controls">
+              <button id="startTimer" class="primary">Start</button>
+              <button id="pauseTimer" class="ghost">Pause</button>
+              <button id="resetTimer" class="ghost">Reset</button>
+            </div>
+            <div class="timer-presets">
+              <button data-mode="pomodoro" class="chip active">Pomodoro (25/5)</button>
+              <button data-mode="deep" class="chip">Deep focus (50/10)</button>
+              <button data-mode="sprint" class="chip">Sprint (15/5)</button>
+              <button data-mode="custom" class="chip">Custom</button>
+              <label class="inline" id="customTime" hidden>Minutes <input type="number" min="1" value="30" /></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Checklist</p>
+              <h3>Priority queue</h3>
+            </div>
+            <div class="progress">
+              <div id="taskProgress" class="progress-bar"></div>
+            </div>
+          </div>
+          <form id="taskForm" class="stacked inline-grid">
+            <label>Task <input name="text" placeholder="Read chapter, practice problems..." required /></label>
+            <label>Category <input name="tag" placeholder="Biology, Calculus..." /></label>
+            <label>Due <input type="date" name="due" /></label>
+            <button type="submit" class="primary">Add task</button>
+          </form>
+          <ul id="taskList" class="list"></ul>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Planner</p>
+              <h3>Session roadmap</h3>
+            </div>
+            <button id="clearPlanner" class="ghost small">Clear</button>
+          </div>
+          <form id="plannerForm" class="stacked inline-grid">
+            <label>Title <input name="title" placeholder="Morning review" required /></label>
+            <label>Time block <input name="slot" placeholder="07:30 - 09:00" required /></label>
+            <label>Intent <input name="intent" placeholder="Spaced repetition" /></label>
+            <button type="submit" class="primary">Add session</button>
+          </form>
+          <ul id="plannerList" class="list compact"></ul>
+        </div>
+
+        <div class="card calendar-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Calendar</p>
+              <h3>Deadlines & events</h3>
+            </div>
+            <div class="calendar-nav">
+              <button id="prevMonth" class="ghost">◀</button>
+              <div id="monthLabel"></div>
+              <button id="nextMonth" class="ghost">▶</button>
+            </div>
+          </div>
+          <div id="calendar" class="calendar"></div>
+          <form id="eventForm" class="stacked inline-grid">
+            <label>Date <input type="date" name="date" required /></label>
+            <label>Title <input name="title" placeholder="Exam, group study" required /></label>
+            <label>Notes <input name="notes" placeholder="Room, resources, goals" /></label>
+            <button type="submit" class="primary">Add event</button>
+          </form>
+          <ul id="eventList" class="list compact"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built for learners who want calm focus, clear plans, and fast review.</p>
+    <div class="pill-row">
+      <span class="pill">Save progress per account</span>
+      <span class="pill">Theme & accent controls</span>
+      <span class="pill">Timers, checklist, planner, calendar</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
