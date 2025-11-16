@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-dark">
+  <div class="background-blur"></div>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div>
+        <p class="eyebrow">Study Studio</p>
+        <h1>Organize. Focus. Grow.</h1>
+        <div class="live-clock" id="liveClock">--:-- --</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="pill tiny" id="streakPill">0 day streak</div>
+      <div class="theme-toggle">
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect">
+          <option value="theme-light">Light</option>
+          <option value="theme-dark" selected>Dark</option>
+          <option value="theme-forest">Forest</option>
+          <option value="theme-ocean">Ocean</option>
+        </select>
+      </div>
+      <div class="accent-picker">
+        <label for="accentColor">Accent</label>
+        <input type="color" id="accentColor" value="#8a7ff0" />
+      </div>
+      <button id="logoutBtn" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel auth" id="authPanel">
+      <div class="auth-forms">
+        <div>
+          <h2>Welcome back</h2>
+          <p class="muted">Sign in to sync your study progress, timers, and planners.</p>
+          <form id="loginForm" class="stacked">
+            <label>Username <input name="username" required /></label>
+            <label>Password <input type="password" name="password" required /></label>
+            <button type="submit" class="primary">Login</button>
+          </form>
+        </div>
+        <div class="divider">
+          <span>or</span>
+        </div>
+        <div>
+          <h2>New here?</h2>
+          <p class="muted">Create an account to save your checklists, planners, and themes.</p>
+          <form id="registerForm" class="stacked">
+            <label>Username <input name="username" required /></label>
+            <label>Password <input type="password" name="password" minlength="4" required /></label>
+            <button type="submit" class="secondary">Create account</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel dashboard" id="dashboard" hidden>
+      <div class="grid summary">
+        <div class="card">
+          <p class="eyebrow">Checklist</p>
+          <h3 id="taskSummary">0 tasks done</h3>
+          <p class="muted">Track quick wins and long-term study goals.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Planner</p>
+          <h3 id="plannerSummary">0 sessions planned</h3>
+          <p class="muted">Block time for deep work, review, and rest.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Events</p>
+          <h3 id="eventSummary">0 calendar events</h3>
+          <p class="muted">Deadlines, exams, and reminders stay in sync.</p>
+        </div>
+        <div class="card">
+          <p class="eyebrow">Timer</p>
+          <h3 id="timerStatus">Ready</h3>
+          <p class="muted">Pomodoro presets with custom focus lengths.</p>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Study timers</p>
+              <h3>Focus lab</h3>
+            </div>
+            <div class="badge" id="timerModeLabel">Pomodoro</div>
+          </div>
+          <div class="timer">
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="timer-controls">
+              <button id="startTimer" class="primary">Start</button>
+              <button id="pauseTimer" class="ghost">Pause</button>
+              <button id="resetTimer" class="ghost">Reset</button>
+            </div>
+            <div class="timer-presets">
+              <button data-mode="pomodoro" class="chip active">Pomodoro (25/5)</button>
+              <button data-mode="deep" class="chip">Deep focus (50/10)</button>
+              <button data-mode="sprint" class="chip">Sprint (15/5)</button>
+              <button data-mode="custom" class="chip">Custom</button>
+              <label class="inline" id="customTime" hidden>Minutes <input type="number" min="1" value="30" /></label>
+              <div class="pill tiny" id="focusStats">0 min logged • 0 sessions</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Checklist</p>
+              <h3>Priority queue</h3>
+            </div>
+            <div class="progress">
+              <div id="taskProgress" class="progress-bar"></div>
+            </div>
+          </div>
+          <form id="taskForm" class="stacked inline-grid">
+            <label>Task <input name="text" placeholder="Read chapter, practice problems..." required /></label>
+            <label>Priority
+              <select name="priority">
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <label>Category <input name="tag" placeholder="Biology, Calculus..." /></label>
+            <label>Due <input type="date" name="due" /></label>
+            <button type="submit" class="primary">Add task</button>
+          </form>
+          <div class="filter-row">
+            <input id="taskFilter" placeholder="Filter by text or tag" />
+            <label class="inline">Only show due soon <input type="checkbox" id="dueSoonToggle" /></label>
+          </div>
+          <ul id="taskList" class="list"></ul>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Planner</p>
+              <h3>Session roadmap</h3>
+            </div>
+            <button id="clearPlanner" class="ghost small">Clear</button>
+          </div>
+          <form id="plannerForm" class="stacked inline-grid">
+            <label>Title <input name="title" placeholder="Morning review" required /></label>
+            <label>Time block <input name="slot" placeholder="07:30 - 09:00" required /></label>
+            <label>Intent <input name="intent" placeholder="Spaced repetition" /></label>
+            <button type="submit" class="primary">Add session</button>
+          </form>
+          <ul id="plannerList" class="list compact"></ul>
+          <div class="pill-row">
+            <button class="chip" data-template="morning">+ Morning warmup</button>
+            <button class="chip" data-template="deep">+ Deep work block</button>
+            <button class="chip" data-template="review">+ Review sprint</button>
+          </div>
+        </div>
+
+        <div class="card calendar-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Calendar</p>
+              <h3>Deadlines & events</h3>
+            </div>
+            <div class="calendar-nav">
+              <button id="prevMonth" class="ghost">◀</button>
+              <div id="monthLabel"></div>
+              <button id="nextMonth" class="ghost">▶</button>
+            </div>
+          </div>
+          <div id="calendar" class="calendar"></div>
+          <form id="eventForm" class="stacked inline-grid">
+            <label>Date <input type="date" name="date" required /></label>
+            <label>Title <input name="title" placeholder="Exam, group study" required /></label>
+            <label>Notes <input name="notes" placeholder="Room, resources, goals" /></label>
+            <button type="submit" class="primary">Add event</button>
+          </form>
+          <ul id="eventList" class="list compact"></ul>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Workspace tabs</p>
+              <h3>Context switcher</h3>
+            </div>
+            <button id="addTab" class="ghost small">+ Tab</button>
+          </div>
+          <div id="tabList" class="tab-row"></div>
+          <form id="tabForm" class="stacked inline-grid">
+            <label>Tab title <input name="title" placeholder="Lab prep, Finals, Portfolio..." required /></label>
+            <button type="submit" class="secondary">Create tab</button>
+          </form>
+          <div class="stacked note-block">
+            <label>Notes for <span id="activeTabLabel">Current tab</span>
+              <textarea id="tabNotes" rows="4" placeholder="Capture ideas, formulas, links..."></textarea>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Daily goals</p>
+              <h3>Win the day</h3>
+            </div>
+            <div class="pill tiny" id="goalLabel">Goal: 90 min</div>
+          </div>
+          <div class="stacked">
+            <label>Focus minutes target <input type="number" id="goalInput" min="15" step="5" value="90" /></label>
+            <div class="progress big">
+              <div id="goalProgress" class="progress-bar"></div>
+            </div>
+            <p class="muted" id="goalProgressText">0 / 90 minutes logged today</p>
+          </div>
+          <div class="stacked">
+            <p class="eyebrow">Habits</p>
+            <div id="habitList" class="habit-row"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid two-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Highlights</p>
+              <h3>Today at a glance</h3>
+            </div>
+            <div class="pill tiny" id="todayCount">0 items</div>
+          </div>
+          <ul id="todayList" class="list compact"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Resources</p>
+              <h3>Reference shelf</h3>
+            </div>
+            <button id="clearResources" class="ghost small">Clear</button>
+          </div>
+          <form id="resourceForm" class="stacked inline-grid">
+            <label>Label <input name="title" placeholder="Flashcards, cheatsheet..." required /></label>
+            <label>Link <input name="url" type="url" placeholder="https://" required /></label>
+            <button type="submit" class="primary">Add link</button>
+          </form>
+          <ul id="resourceList" class="list compact"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built for learners who want calm focus, clear plans, and fast review.</p>
+    <div class="pill-row">
+      <span class="pill">Save progress per account</span>
+      <span class="pill">Theme & accent controls</span>
+      <span class="pill">Timers, checklist, planner, calendar</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
